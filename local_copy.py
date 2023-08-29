@@ -8,7 +8,6 @@ def format_sd_card(device_path):
     try:
         subprocess.run(["sudo", "umount", device_path], check=True)
         subprocess.run(["sudo", "mkfs.vfat", "-F", "32", device_path], check=True)
-        print("SD-Karte wurde erfolgreich formatiert.")
         return True
     except subprocess.CalledProcessError:
         return False
@@ -29,8 +28,6 @@ def recursive_copy(src_folder, dest_path):
 
 def main():
     mylcd = I2C_LCD_driver.lcd()
-
-    # Durchsuche den Ordner "SD_Karten_Backup" nach vorhandenen Ordnern und ermittle den höchsten Counter
     dest_folder = '/home/pi/Desktop/temp'
     sd_card_path = "/dev/sda1"
     existing_folders = [f for f in os.listdir(dest_folder) if os.path.isdir(os.path.join(dest_folder, f)) and f.startswith('SD_Karte_')]
@@ -40,7 +37,6 @@ def main():
         counter = 0
 
     while True:
-        # Überprüfen, ob eine SD-Karte eingesteckt ist und Dateien enthält
             if os.listdir('/media/pi'):
                 try:
                     print("SD-Karte wird kopiert...")
@@ -48,18 +44,14 @@ def main():
                     mylcd.lcd_display_string("SD-Karte wird", 1)
                     mylcd.lcd_display_string("kopiert...", 2)
 
-                    # Erstellen eines Ordners für die SD-Karte auf dem Desktop
                     src_folder = '/media/pi/'
 
-                    # Erhöhe den Zähler um 1
                     counter += 1
                     folder_name = f"SD_Karte_{counter}"
                     dest_path = os.path.join(dest_folder, folder_name)
                     os.makedirs(dest_path, exist_ok=True)
 
                     process_success = False
-
-                    # Kopieren aller Dateien von der SD-Karte in den Ordner für diese SD-Karte
                     copy_success = recursive_copy(src_folder, dest_path)
 
                     if copy_success[0]:
@@ -98,7 +90,6 @@ def main():
 
                 finally:
                     if not process_success:
-                        # Wiederherstellen der ursprünglichen Ordnung (falls benötigt)
                         if os.path.exists(dest_path):
                             shutil.rmtree(dest_path)
             else:
