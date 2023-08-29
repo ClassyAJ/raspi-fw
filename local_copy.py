@@ -33,13 +33,9 @@ def main():
     # Durchsuche den Ordner "SD_Karten_Backup" nach vorhandenen Ordnern und ermittle den höchsten Counter
     dest_folder = '/home/pi/temp'
     sd_card_path = "/dev/sda1"
-
-    for folder in os.listdir(dest_folder):
-        print(folder)
-
     existing_folders = [f for f in os.listdir(dest_folder) if os.path.isdir(os.path.join(dest_folder, f)) and f.startswith('SD_Karte_')]
     if existing_folders:
-        counter = len(existing_folders)
+        counter = max([int(f.split('_')[-1]) for f in existing_folders])
     else:
         counter = 0
 
