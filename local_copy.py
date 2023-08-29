@@ -31,7 +31,6 @@ def main():
     dest_folder = '/home/pi/Desktop/temp'
     sd_card_path = "/dev/sda1"
 
-
     while True:
             if os.listdir('/media/pi'):
                 try:
@@ -67,6 +66,16 @@ def main():
                                 mylcd.lcd_display_string("Karte formatiert!", 1)
                                 mylcd.lcd_display_string("Bereit", 2)
                                 process_success = True
+                                while os.listdir('/media/pi'):
+                                    mylcd.lcd_clear()
+                                    mylcd.lcd_display_string("Vorgang", 1)
+                                    mylcd.lcd_display_string("erfolgreich", 2)
+                                    sleep(4)
+                                    mylcd.lcd_clear()
+                                    mylcd.lcd_display_string("SD-Karte", 1)
+                                    mylcd.lcd_display_string("entnehmen", 2)
+                                    sleep(4)
+                                mylcd.lcd_clear()
                             else:
                                 mylcd.lcd_clear()
                                 mylcd.lcd_display_string("Formatieren fehlgeschlagen!", 1)
