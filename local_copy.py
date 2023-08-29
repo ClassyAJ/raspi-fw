@@ -4,12 +4,10 @@ import I2C_LCD_driver
 from time import *
 import subprocess
 
-def format_sd_card(device_path, src_folder):
+def format_sd_card(device_path):
     try:
         subprocess.run(["sudo", "umount", device_path], check=True)
         subprocess.run(["sudo", "mkfs.vfat", "-F", "32", device_path], check=True)
-        subprocess.run(["sudo", "mkdir", src_folder, ], check=True)
-        subprocess.run(["sudo", "mount", device_path, src_folder], check=True)
         return True
     except subprocess.CalledProcessError:
         return False
@@ -60,29 +58,14 @@ def main():
                         mylcd.lcd_clear()
                         mylcd.lcd_display_string("Dateien okay,", 1)
                         mylcd.lcd_display_string("formatiere Karte...", 2)
-                        temp_folder = f"{src_folder}TEMP"
 
                         try:
-                            if format_sd_card(sd_card_path, temp_folder):
+                            if format_sd_card(sd_card_path):
                                 print("SD-Karte erfolgreich formatiert.")
                                 mylcd.lcd_clear()
                                 mylcd.lcd_display_string("Karte formatiert!", 1)
                                 mylcd.lcd_display_string("Bereit", 2)
                                 process_success = True
-
-                                while os.path.exists(temp_folder):
-                                    print("Vorgang erfolgreich")
-                                    mylcd.lcd_clear()
-                                    mylcd.lcd_display_string("Vorgang", 1)
-                                    mylcd.lcd_display_string("erfolgreich", 2)
-                                    sleep(4)
-                                    print("SD-Karte entnehmen")
-                                    mylcd.lcd_clear()
-                                    mylcd.lcd_display_string("SD-Karte", 1)
-                                    mylcd.lcd_display_string("entnehmen", 2)
-                                    sleep(4)
-                                mylcd.lcd_clear()
-
                             else:
                                 mylcd.lcd_clear()
                                 mylcd.lcd_display_string("Formatieren fehlgeschlagen!", 1)
