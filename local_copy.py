@@ -8,6 +8,7 @@ def format_sd_card(device_path, src_folder):
     try:
         subprocess.run(["sudo", "umount", device_path], check=True)
         subprocess.run(["sudo", "mkfs.vfat", "-F", "32", device_path], check=True)
+        subprocess.run(["sudo", "mkdir", f"{device_path}/TEMP", ], check=True)
         subprocess.run(["sudo", "mount", device_path, src_folder], check=True)
         return True
     except subprocess.CalledProcessError:
