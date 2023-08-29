@@ -31,7 +31,7 @@ def main():
     mylcd = I2C_LCD_driver.lcd()
 
     # Durchsuche den Ordner "SD_Karten_Backup" nach vorhandenen Ordnern und ermittle den höchsten Counter
-    dest_folder = '/home/pi/temp'
+    dest_folder = '/home/pi/Desktop/temp'
     sd_card_path = "/dev/sda1"
     existing_folders = [f for f in os.listdir(dest_folder) if os.path.isdir(os.path.join(dest_folder, f)) and f.startswith('SD_Karte_')]
     if existing_folders:
@@ -50,7 +50,6 @@ def main():
 
                     # Erstellen eines Ordners für die SD-Karte auf dem Desktop
                     src_folder = '/media/pi/'
-                    dest_folder = '/home/pi/Desktop/temp/'
 
                     # Erhöhe den Zähler um 1
                     counter += 1
