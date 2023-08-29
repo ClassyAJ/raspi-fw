@@ -6,7 +6,7 @@ import subprocess
 
 def format_sd_card(device_path):
     try:
-        subprocess.run(["sudo", "umount", device_path], check=True)
+        #subprocess.run(["sudo", "umount", device_path], check=True)
         subprocess.run(["sudo", "mkfs.vfat", "-F", "32", device_path], check=True)
         return True
     except subprocess.CalledProcessError:
@@ -38,8 +38,6 @@ def main():
                     mylcd.lcd_clear()
                     mylcd.lcd_display_string("SD-Karte wird", 1)
                     mylcd.lcd_display_string("kopiert...", 2)
-
-
 
                     src_folder = '/media/pi/'
                     src_files = os.listdir(src_folder)[0]
