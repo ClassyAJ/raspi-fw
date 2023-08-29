@@ -30,11 +30,7 @@ def main():
     mylcd = I2C_LCD_driver.lcd()
     dest_folder = '/home/pi/Desktop/temp'
     sd_card_path = "/dev/sda1"
-    existing_folders = [f for f in os.listdir(dest_folder) if os.path.isdir(os.path.join(dest_folder, f)) and f.startswith('SD_Karte_')]
-    if existing_folders:
-        counter = max([int(f.split('_')[-1]) for f in existing_folders])
-    else:
-        counter = 0
+
 
     while True:
             if os.listdir('/media/pi'):
@@ -46,7 +42,11 @@ def main():
 
                     src_folder = '/media/pi/'
 
-                    counter += 1
+                    existing_folders = [f for f in os.listdir(dest_folder) if os.path.isdir(os.path.join(dest_folder, f)) and f.startswith('SD_Karte_')]
+                    if existing_folders:
+                        counter = max([int(f.split('_')[-1]) for f in existing_folders]) + 1
+                    else:
+                        counter = 1
                     folder_name = f"SD_Karte_{counter}"
                     dest_path = os.path.join(dest_folder, folder_name)
                     os.makedirs(dest_path, exist_ok=True)
