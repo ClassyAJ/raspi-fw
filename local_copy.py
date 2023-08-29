@@ -71,10 +71,12 @@ def main():
                                 process_success = True
 
                                 while os.path.exists(temp_folder):
+                                    print("Vorgang erfolgreich")
                                     mylcd.lcd_clear()
                                     mylcd.lcd_display_string("Vorgang", 1)
                                     mylcd.lcd_display_string("erfolgreich", 2)
                                     sleep(4)
+                                    print("SD-Karte entnehmen")
                                     mylcd.lcd_clear()
                                     mylcd.lcd_display_string("SD-Karte", 1)
                                     mylcd.lcd_display_string("entnehmen", 2)
