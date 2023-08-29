@@ -42,7 +42,7 @@ def main():
     mylcd = I2C_LCD_driver.lcd()
 
     dest_folder = '/home/pi/temp'
-
+    counter = 0
     if os.listdir('/media/pi'):
         print("SD-Karte wird kopiert...")
         mylcd.lcd_clear()
