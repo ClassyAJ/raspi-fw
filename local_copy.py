@@ -35,7 +35,7 @@ def main():
     sd_card_path = "/dev/sda1"
     existing_folders = [f for f in os.listdir(dest_folder) if os.path.isdir(os.path.join(dest_folder, f)) and f.startswith('SD_Karte_')]
     if existing_folders:
-        counter = max([int(f.split('_')[-1]) for f in existing_folders])
+        counter = len(existing_folders)
     else:
         counter = 0
 
