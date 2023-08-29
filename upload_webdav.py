@@ -7,7 +7,7 @@ import subprocess
 # Definiere die Pfade
 class Constants(Enum):
     LOCKFILE = '/tmp/webdav_sync.lock'
-    TEMP_FOLDER = '/home/pi/temp'
+    TEMP_FOLDER = '/home/pi/Desktop/temp'
     WEBDAV_MOUNT_POINT = '/mnt/webdav'
     WEBDAV_SHARE_URL = 'https://webdav.example.com/share'
     WEBDAV_USERNAME = 'your_username'
