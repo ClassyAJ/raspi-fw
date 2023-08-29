@@ -27,13 +27,8 @@ def recursive_copy(src_folder, dest_path):
                 dest_path_temp = os.path.join(dest_path, item)
                 print("dest path to file")
                 print(dest_path_temp)
-                print("exists")
-                print(os.path.exists(dest_path_temp))
-                print("time")
-                print(os.stat(s).st_mtime - os.stat(dest_path_temp).st_mtime > 1)
-                if not os.path.exists(dest_path_temp) or os.stat(s).st_mtime - os.stat(dest_path_temp).st_mtime > 1:
-                    print("copy")
-                    shutil.copy2(s, dest_path_temp)
+                print("copy")
+                shutil.copy2(s, dest_path_temp)
         return True, None
     except Exception as err:
         return False, err
