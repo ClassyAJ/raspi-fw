@@ -39,7 +39,11 @@ def main():
                     mylcd.lcd_display_string("SD-Karte wird", 1)
                     mylcd.lcd_display_string("kopiert...", 2)
 
+
+
                     src_folder = '/media/pi/'
+                    src_files = os.listdir(src_folder)[0]
+                    src_path = os.path.join(src_folder, src_files)
 
                     existing_folders = [f for f in os.listdir(dest_folder) if os.path.isdir(os.path.join(dest_folder, f)) and f.startswith('SD_Karte_')]
                     if existing_folders:
@@ -66,7 +70,7 @@ def main():
                                 mylcd.lcd_display_string("Karte formatiert!", 1)
                                 mylcd.lcd_display_string("Bereit", 2)
                                 process_success = True
-                                while os.listdir('/media/pi'):
+                                while os.path.exists(src_path):
                                     mylcd.lcd_clear()
                                     mylcd.lcd_display_string("Vorgang", 1)
                                     mylcd.lcd_display_string("erfolgreich", 2)
