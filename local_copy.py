@@ -4,6 +4,15 @@ import I2C_LCD_driver
 from time import *
 import subprocess
 
+def format_sd_card(device_path):
+    try:
+        subprocess.run(["sudo", "umount", device_path], check=True)
+        subprocess.run(["sudo", "mkfs.vfat", "-F", "32", device_path], check=True)
+        print("SD-Karte wurde erfolgreich formatiert.")
+        return True
+    except subprocess.CalledProcessError as e:
+        return False
+
 def recursive_copy(src_folder, dest_path):
     try:
         for item in os.listdir(src_folder):
@@ -24,6 +33,7 @@ def main():
 
     # Durchsuche den Ordner "SD_Karten_Backup" nach vorhandenen Ordnern und ermittle den höchsten Counter
     dest_folder = '/home/pi/temp'
+    sd_card_path = "/dev/sda1"
     existing_folders = [f for f in os.listdir(dest_folder) if os.path.isdir(os.path.join(dest_folder, f)) and f.startswith('SD_Karte_')]
     if existing_folders:
         counter = max([int(f.split('_')[-1]) for f in existing_folders])
@@ -61,23 +71,23 @@ def main():
                         mylcd.lcd_display_string("formatiere Karte...", 2)
 
                         try:
-                            for item in os.listdir(src_folder):
-                                item_path = os.path.join(src_folder, item)
-                                try:
-                                    os.remove(item_path)
-                                except OSError:
-                                    shutil.rmtree(item_path)
-
-                            print("SD-Karte erfolgreich formatiert.")
-                            mylcd.lcd_clear()
-                            mylcd.lcd_display_string("Karte formatiert!", 1)
-                            mylcd.lcd_display_string("Bereit", 2)
-                            process_success = True
+                            if format_sd_card(sd_card_path):
+                                print("SD-Karte erfolgreich formatiert.")
+                                mylcd.lcd_clear()
+                                mylcd.lcd_display_string("Karte formatiert!", 1)
+                                mylcd.lcd_display_string("Bereit", 2)
+                                process_success = True
+                            else:
+                                mylcd.lcd_clear()
+                                mylcd.lcd_display_string("Formatieren fehlgeschlagen!", 1)
+                                mylcd.lcd_display_string("neu einstecken", 2)
+                                print("Vorhandener Ordner wird gelöscht")
+                                print("SD Karte muss erneut eingesteckt werden")
                         except Exception as err:
                             print(err)
                             mylcd.lcd_clear()
                             mylcd.lcd_display_string("Formatieren fehlgeschlagen!", 1)
-                            mylcd.lcd_display_string("Bereit", 2)
+                            mylcd.lcd_display_string("neu einstecken", 2)
 
                     else:
                         print("Kopieren nicht erfolgreich, bitte Karte erneut einführen...")
