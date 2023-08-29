@@ -41,7 +41,7 @@ def main():
 
                     # Erstellen eines Ordners für die SD-Karte auf dem Desktop
                     src_folder = '/media/pi/'
-                    dest_folder = '/home/pi/temp/'
+                    dest_folder = '/home/pi/Desktop/temp/'
 
                     # Erhöhe den Zähler um 1
                     counter += 1
