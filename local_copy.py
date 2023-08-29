@@ -14,8 +14,7 @@ class FaultyCopyProcess(Exception):
         pof -- point of failure where error was caused
         message -- explanation where error was thrown
     """
-
-    def __init__(self, pof, message="Error thrown in "):
+    def __init__(self, pof, message="Error thrown in ") -> None:
         self.salary = pof
         self.message = f"{message} {pof}"
         print(self.message)
@@ -37,33 +36,35 @@ class LcdScreen():
     Attributes:
         mylcd: An instance of the I2C_LCD_driver.lcd class.
     """
-
     def __init__(self) -> None:
         """
         Initializes a new instance of the LcdScreen class.
         """
         self.mylcd = I2C_LCD_driver.lcd()
 
-    def clear(self):
+    def clear(self) -> None:
         """
         Clears the contents of the LCD screen.
         """
         self.mylcd.lcd_clear()
 
-    def wait(self, amount: int):
+    def wait(self, amount: int) -> None:
         """
         Waits a specific amount of time.
         """
         sleep(secs=amount)
 
-    def print_rows(self, *extra_args: str, row1: str = None, row2: str = None):
+    def print_rows(self, *extra_args: str, row1: str = None, row2: str = None) -> None:
         """
         Prints text to the first and second rows of the LCD screen and to the console.
 
         Args:
-            row1 (str): The text to be printed on the first row of the LCD screen. Defaults to None.
-            row2 (str): The text to be printed on the second row of the LCD screen. Defaults to None.
-            *extra_args (str): Additional text to be printed to the console.
+            row1 (str):
+                The text to be printed on the first row of the LCD screen. Defaults to None.
+            row2 (str):
+                The text to be printed on the second row of the LCD screen. Defaults to None.
+            *extra_args (str):
+                Additional text to be printed to the console.
 
         Returns:
             None
@@ -78,19 +79,23 @@ class LcdScreen():
         if console_print:
             print(console_print)
 
-def _format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen):
+def _format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen) -> None:
     """
     Formats an SD card and mounts it to a specified folder.
 
     Args:
-        device_path (str): The device path of the SD card to be formatted.
-        src_folder (str): The path of the folder where the SD card will be mounted.
+        device_path (str):
+            The device path of the SD card to be formatted.
+        src_folder (str):
+            The path of the folder where the SD card will be mounted.
 
     Returns:
-        bool: True if the SD card was successfully formatted and mounted, False otherwise.
+        bool:
+            True if the SD card was successfully formatted and mounted, False otherwise.
 
     Raises:
-        subprocess.CalledProcessError: If an error occurs while running a subprocess command.
+        subprocess.CalledProcessError:
+            If an error occurs while running a subprocess command.
     """
     try:
         subprocess.run(["sudo", "umount", device_path], check=True)
@@ -106,21 +111,25 @@ def _format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen):
             *("Vorhandener Ordner wird gelöscht", "SD Karte muss erneut eingesteckt werden"))
         raise FaultyCopyProcess(pof="SD formatting") from err
 
-
-def format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen):
+def format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen) -> bool:
     """
     Formats an SD card and displays status messages on an LCD screen.
 
     Args:
-        device_path (str): The device path of the SD card to be formatted.
-        src_path (str): The path of the source folder where it gets re-mounted after formatting.
-        lcd_screen (LcdScreen): An instance of the LcdScreen class used to display status messages.
+        device_path (str):
+            The device path of the SD card to be formatted.
+        src_path (str):
+            The path of the source folder where it gets re-mounted after formatting.
+        lcd_screen (LcdScreen):
+            An instance of the LcdScreen class used to display status messages.
 
     Returns:
-        bool: True if the SD card was successfully formatted, False otherwise.
+        bool:
+            True if the SD card was successfully formatted, False otherwise.
 
     Raises:
-        FaultyCopyProcess: If an error occurs while copying files or formatting the SD card.
+        FaultyCopyProcess:
+            If an error occurs while copying files or formatting the SD card.
     """
     try:
         lcd_screen.print_rows(row1="Dateien kopiert", row2="Formatiere...")
@@ -134,22 +143,27 @@ def format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen):
     except FaultyCopyProcess as err:
         raise FaultyCopyProcess(pof=err.message) from err
 
-def recursive_copy(src_folder, dest_path):
+def recursive_copy(src_folder, dest_path) -> None:
     """
     Recursively copies the contents of a source folder to a destination path.
 
     Args:
-        src_folder (str): The path of the source folder whose contents are to be copied.
-        dest_path (str): The path of the destination where the contents will be copied.
+        src_folder (str):
+            The path of the source folder whose contents are to be copied.
+        dest_path (str):
+            The path of the destination where the contents will be copied.
 
     Returns:
-        tuple: A tuple containing a boolean value indicating whether the copy
-        operation was successful, and an error message if an error occurred.
+        tuple:
+            A tuple containing a boolean value indicating whether the copy
+            operation was successful, and an error message if an error occurred.
 
     Raises:
-        FileNotFoundError: If the source folder or destination path do not exist.
-        PermissionError: If the user does not have permission to access the
-        source folder or destination path.
+        FileNotFoundError:
+            If the source folder or destination path do not exist.
+        PermissionError:
+            If the user does not have permission to access the
+            source folder or destination path.
     """
     try:
         for item in os.listdir(src_folder):
@@ -163,13 +177,14 @@ def recursive_copy(src_folder, dest_path):
     except (FileNotFoundError, PermissionError) as err:
         raise FaultyCopyProcess(pof=f'copy success verification. Error: {err.args[0]}') from err
 
-def get_current_counter(folder: str):
+def get_current_counter(folder: str) -> int:
     """
     Returns the current counter value based on the existing folders in the specified folder.
     Returns 1 if no folder exists matching the pattern.
 
     Args:
-        folder (str): The path of the folder to search for existing folders.
+        folder (str):
+        The path of the folder to search for existing folders.
 
     Returns:
         int: The current counter value.
@@ -182,7 +197,7 @@ def get_current_counter(folder: str):
         return max((int(f.split('_')[-1]) for f in existing_folders)) + 1
     return 1
 
-def main():
+def main() -> None:
     """
     Main function.
     """
