@@ -59,7 +59,7 @@ def main():
                         mylcd.lcd_clear()
                         mylcd.lcd_display_string("Dateien okay,", 1)
                         mylcd.lcd_display_string("formatiere Karte...", 2)
-                        temp_folder = f"{src_folder}/TEMP"
+                        temp_folder = f"{src_folder}TEMP"
 
                         try:
                             if format_sd_card(sd_card_path, temp_folder):
