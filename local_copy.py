@@ -10,7 +10,7 @@ def format_sd_card(device_path):
         subprocess.run(["sudo", "mkfs.vfat", "-F", "32", device_path], check=True)
         print("SD-Karte wurde erfolgreich formatiert.")
         return True
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         return False
 
 def recursive_copy(src_folder, dest_path):
@@ -22,8 +22,7 @@ def recursive_copy(src_folder, dest_path):
                 recursive_copy(src_folder=s, dest_path=dest_path)
             else:
                 dest_path_temp = os.path.join(dest_path, item)
-                if not os.path.exists(dest_path_temp) or os.stat(s).st_mtime - os.stat(dest_path_temp).st_mtime > 1:
-                    shutil.copy2(s, dest_path_temp)
+                shutil.copy2(s, dest_path_temp)
         return True, None
     except Exception as err:
         return False, err
