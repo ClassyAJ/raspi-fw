@@ -61,8 +61,12 @@ def main():
                         mylcd.lcd_display_string("formatiere Karte...", 2)
 
                         try:
-                            # Hier wird die SD-Karte formatiert (Achtung: Datenverlust!)
-                            subprocess.run(['sudo', 'rm -r', f"{src_folder}*"])  # Passe den Gerätenamen entsprechend an
+                            for item in os.listdir(src_folder):
+                                item_path = os.path.join(src_folder, item)
+                                try:
+                                    os.remove(item_path)
+                                except OSError:
+                                    shutil.rmtree(item_path)
 
                             print("SD-Karte erfolgreich formatiert.")
                             mylcd.lcd_clear()
