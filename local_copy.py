@@ -4,7 +4,6 @@ import shutil
 import subprocess
 from enum import Enum
 from time import sleep
-from typing import Optional, Tuple
 import I2C_LCD_driver
 
 
