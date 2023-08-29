@@ -32,69 +32,68 @@ def main():
 
     while True:
         # Überprüfen, ob eine SD-Karte eingesteckt ist und Dateien enthält
-        try:
             if os.listdir('/media/pi'):
-                print("SD-Karte wird kopiert...")
-                mylcd.lcd_clear()
-                mylcd.lcd_display_string("SD-Karte wird", 1)
-                mylcd.lcd_display_string("kopiert...", 2)
-
-                # Erstellen eines Ordners für die SD-Karte auf dem Desktop
-                src_folder = '/media/pi/'
-                dest_folder = '/home/pi/temp/'
-
-                # Erhöhe den Zähler um 1
-                counter += 1
-                folder_name = f"SD_Karte_{counter}"
-                dest_path = os.path.join(dest_folder, folder_name)
-                os.makedirs(dest_path, exist_ok=True)
-
-                process_success = False
-
-                # Kopieren aller Dateien von der SD-Karte in den Ordner für diese SD-Karte
-                copy_success = recursive_copy(src_folder, dest_path)
-
-                if copy_success[0]:
-                    print("Alle Dateien erfolgreich kopiert, formatiere SD-Karte...")
+                try:
+                    print("SD-Karte wird kopiert...")
                     mylcd.lcd_clear()
-                    mylcd.lcd_display_string("Dateien okay,", 1)
-                    mylcd.lcd_display_string("formatiere Karte...", 2)
+                    mylcd.lcd_display_string("SD-Karte wird", 1)
+                    mylcd.lcd_display_string("kopiert...", 2)
 
-                    try:
-                        # Hier wird die SD-Karte formatiert (Achtung: Datenverlust!)
-                        subprocess.run(['sudo', 'rm -r', f"{src_folder}*"])  # Passe den Gerätenamen entsprechend an
+                    # Erstellen eines Ordners für die SD-Karte auf dem Desktop
+                    src_folder = '/media/pi/'
+                    dest_folder = '/home/pi/temp/'
 
-                        print("SD-Karte erfolgreich formatiert.")
+                    # Erhöhe den Zähler um 1
+                    counter += 1
+                    folder_name = f"SD_Karte_{counter}"
+                    dest_path = os.path.join(dest_folder, folder_name)
+                    os.makedirs(dest_path, exist_ok=True)
+
+                    process_success = False
+
+                    # Kopieren aller Dateien von der SD-Karte in den Ordner für diese SD-Karte
+                    copy_success = recursive_copy(src_folder, dest_path)
+
+                    if copy_success[0]:
+                        print("Alle Dateien erfolgreich kopiert, formatiere SD-Karte...")
                         mylcd.lcd_clear()
-                        mylcd.lcd_display_string("Karte formatiert!", 1)
-                        mylcd.lcd_display_string("Bereit", 2)
-                        process_success = True
-                    except Exception as err:
-                        print(err)
+                        mylcd.lcd_display_string("Dateien okay,", 1)
+                        mylcd.lcd_display_string("formatiere Karte...", 2)
+
+                        try:
+                            # Hier wird die SD-Karte formatiert (Achtung: Datenverlust!)
+                            subprocess.run(['sudo', 'rm -r', f"{src_folder}*"])  # Passe den Gerätenamen entsprechend an
+
+                            print("SD-Karte erfolgreich formatiert.")
+                            mylcd.lcd_clear()
+                            mylcd.lcd_display_string("Karte formatiert!", 1)
+                            mylcd.lcd_display_string("Bereit", 2)
+                            process_success = True
+                        except Exception as err:
+                            print(err)
+                            mylcd.lcd_clear()
+                            mylcd.lcd_display_string("Formatieren fehlgeschlagen!", 1)
+                            mylcd.lcd_display_string("Bereit", 2)
+
+                    else:
+                        print("Kopieren nicht erfolgreich, bitte Karte erneut einführen...")
+                        print(copy_success[1])
                         mylcd.lcd_clear()
-                        mylcd.lcd_display_string("Formatieren fehlgeschlagen!", 1)
-                        mylcd.lcd_display_string("Bereit", 2)
+                        mylcd.lcd_display_string("Kopieren fehlgeschlagen,", 1)
+                        mylcd.lcd_display_string("Karte erneut einführen...", 2)
+                except Exception as err:
+                    print("Etwas ist schiefgelaufen")
 
-                else:
-                    print("Kopieren nicht erfolgreich, bitte Karte erneut einführen...")
-                    print(copy_success[1])
-                    mylcd.lcd_clear()
-                    mylcd.lcd_display_string("Kopieren fehlgeschlagen,", 1)
-                    mylcd.lcd_display_string("Karte erneut einführen...", 2)
-
+                finally:
+                    if not process_success:
+                        # Wiederherstellen der ursprünglichen Ordnung (falls benötigt)
+                        if os.path.exists(dest_path):
+                            shutil.rmtree(dest_path)
             else:
                 print("Bereit")
                 mylcd.lcd_display_string("Bereit", 1)
                 sleep(1)
                 mylcd.lcd_clear()
-        except Exception as err:
-            print("Etwas ist schiefgelaufen")
-
-        finally:
-            if not process_success:
-                # Wiederherstellen der ursprünglichen Ordnung (falls benötigt)
-                if os.path.exists(dest_path):
-                    shutil.rmtree(dest_path)
 
 if __name__ == "__main__":
     main()
