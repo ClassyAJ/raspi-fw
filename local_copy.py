@@ -147,7 +147,7 @@ def _format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen) -> N
         os.makedirs(src_path, exist_ok=True)
         subprocess.run(["sudo", "mount", device_path, src_path], check=True)
     except subprocess.CalledProcessError as err:
-        lcd_screen.print_rows(row1="Formatieren", row2="fehlgeschlagen", *(err.args[0]))
+        lcd_screen.print_rows(row1="Formatieren", row2="fehlgeschlagen", *("err", str(err.args[0])))
         lcd_screen.wait(amount=2)
         lcd_screen.print_rows(
             row1="SD-Karte",
