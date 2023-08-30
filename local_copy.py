@@ -190,7 +190,7 @@ def format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen, dry_r
         lcd_screen.wait(amount=2)
         return True
     except FaultyCopyProcess as err:
-        raise FaultyCopyProcess from err
+        raise FaultyCopyProcess(pof="SD formatting") from err
 
 def recursive_copy(src_folder: str, dest_path: str, dry_run: bool = False) -> None:
     """
