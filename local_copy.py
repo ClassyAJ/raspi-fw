@@ -144,8 +144,8 @@ def _format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen) -> N
     try:
         subprocess.run(["sudo", "umount", device_path], check=True)
         subprocess.run(["sudo", "mkfs.vfat", "-F", "32", device_path], check=True)
-        os.makedirs(src_path, exist_ok=True)
-        subprocess.run(["sudo", "mount", device_path, src_path], check=True)
+        #os.makedirs(src_path, exist_ok=True)
+        #subprocess.run(["sudo", "mount", device_path, src_path], check=True)
     except subprocess.CalledProcessError as err:
         lcd_screen.print_rows(row1="Formatieren", row2="fehlgeschlagen", *("err", str(err.args[0])))
         lcd_screen.wait(amount=2)
@@ -303,7 +303,7 @@ def main(dry_run: bool = False) -> None:
                 src_path=Constants.TEMP_FOLDER.value,
                 lcd_screen=lcd_screen)
 
-            while os.path.exists(Constants.TEMP_FOLDER.value):
+            while os.path.exists(Constants.SD_CARD_PATH.value):
                 lcd_screen.print_rows(row1="Vorgang", row2="erfolgreich")
                 lcd_screen.wait(amount=3)
                 lcd_screen.print_rows(row1="SD-Karte", row2="entnehmen")
