@@ -313,10 +313,12 @@ def main(dry_run: bool = False) -> None:
             lcd_screen.print_rows(row1="Kopieren", row2="fehlgeschlagen")
             lcd_screen.wait(amount=2)
             lcd_screen.print_rows(row1="Karte entfernen", row2="neu einstecken")
+            lcd_screen.wait(amount=2)
             while os.path.exists(Constants.SD_CARD_PATH.value):
                 lcd_screen.print_rows(row1="Kopieren", row2="fehlgeschlagen")
                 lcd_screen.wait(amount=2)
                 lcd_screen.print_rows(row1="Karte entfernen", row2="neu einstecken")
+                lcd_screen.wait(amount=2)
         finally:
             if not process_success:
                 if os.path.exists(dest_path):
