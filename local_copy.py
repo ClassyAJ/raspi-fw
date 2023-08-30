@@ -227,7 +227,7 @@ def recursive_copy(src_folder: str, dest_path: str, dry_run: bool = False) -> No
             else:
                 dest_path_temp = os.path.join(dest_path, item)
                 shutil.copy2(source_path, dest_path_temp)
-    except (FileNotFoundError, PermissionError) as err:
+    except (OSError, FileNotFoundError, PermissionError) as err:
         raise FaultyCopyProcess(pof=f'copy success verification. Error: {err.args[0]}') from err
 
 def get_current_counter(folder: str, dry_run: bool = False) -> int:
