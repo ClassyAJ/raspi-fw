@@ -286,7 +286,7 @@ def main(dry_run: bool = False) -> None:
         sys.exit(0)
 
     while True:
-        if not os.listdir(Constants.SRC_FOLDER.value):
+        while not os.listdir(Constants.SRC_FOLDER.value):
             lcd_screen.print_rows(row1="Bereit")
             lcd_screen.wait(amount=1)
 
