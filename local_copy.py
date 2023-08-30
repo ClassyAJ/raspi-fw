@@ -1,4 +1,6 @@
-
+"""
+Script to automatically copy files from SD card to local directory on pi
+"""
 import argparse
 import os
 import shutil
@@ -123,7 +125,7 @@ class PrintScreen(LcdScreen):
         if console_print:
             print(console_print)
 
-def _format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen) -> None:
+def _format_sd_card(device_path: str, lcd_screen: LcdScreen) -> None:
     """
     Formats an SD card and mounts it to a specified folder.
 
@@ -144,8 +146,6 @@ def _format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen) -> N
     try:
         subprocess.run(["sudo", "umount", device_path], check=True)
         subprocess.run(["sudo", "mkfs.vfat", "-F", "32", device_path], check=True)
-        #os.makedirs(src_path, exist_ok=True)
-        #subprocess.run(["sudo", "mount", device_path, src_path], check=True)
     except subprocess.CalledProcessError as err:
         lcd_screen.print_rows(row1="Formatieren", row2="fehlgeschlagen", *("err", str(err.args[0])))
         lcd_screen.wait(amount=2)
@@ -185,13 +185,12 @@ def format_sd_card(device_path: str, src_path: str, lcd_screen: LcdScreen, dry_r
         lcd_screen.print_rows(row1="Dateien kopiert", row2="Formatiere...")
         _format_sd_card(
             device_path=device_path,
-            src_path=src_path,
             lcd_screen=lcd_screen)
         lcd_screen.print_rows(row1="Karte formatiert")
         lcd_screen.wait(amount=2)
         return True
     except FaultyCopyProcess as err:
-        raise FaultyCopyProcess(pof=err.message) from err
+        raise FaultyCopyProcess from err
 
 def recursive_copy(src_folder: str, dest_path: str, dry_run: bool = False) -> None:
     """
@@ -311,7 +310,10 @@ def main(dry_run: bool = False) -> None:
             lcd_screen.clear()
 
         except FaultyCopyProcess:
-            while os.path.exists(Constants.SRC_FOLDER.value):
+            lcd_screen.print_rows(row1="Kopieren", row2="fehlgeschlagen")
+            lcd_screen.wait(amount=2)
+            lcd_screen.print_rows(row1="Karte entfernen", row2="neu einstecken")
+            while os.path.exists(Constants.SD_CARD_PATH.value):
                 lcd_screen.print_rows(row1="Kopieren", row2="fehlgeschlagen")
                 lcd_screen.wait(amount=2)
                 lcd_screen.print_rows(row1="Karte entfernen", row2="neu einstecken")
